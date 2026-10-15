@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: 3105-license-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python key_api.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_ADMIN_ID
+        sync: false
+      - key: KEYS_DB_PATH
+        value: /tmp/keys.db

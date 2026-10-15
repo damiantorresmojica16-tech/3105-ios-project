@@ -1,0 +1,34 @@
+workflows:
+  ios-enterprise-ipa:
+    name: 3105 Enterprise IPA
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      groups:
+        - license_config
+      ios_signing:
+        distribution_type: enterprise
+        bundle_identifier: com.apple.mobile.MobileHouseArrest
+    scripts:
+      - name: Configure license verification endpoint
+        script: |
+          if [ -z "${DRT_LICENSE_VERIFY_URL:-}" ]; then
+            echo "Set DRT_LICENSE_VERIFY_URL in the license_config environment group."
+            exit 1
+          fi
+          case "$DRT_LICENSE_VERIFY_URL" in
+            https://*/verify) ;;
+            *)
+              echo "DRT_LICENSE_VERIFY_URL must be an HTTPS URL ending in /verify."
+              exit 1
+              ;;
+          esac
+          /usr/libexec/PlistBuddy -c "Set :DRTLicenseVerifyURL $DRT_LICENSE_VERIFY_URL" ThreeOneOSFive/Info.plist
+      - name: Apply enterprise signing profile
+        script: xcode-project use-profiles
+      - name: Build signed IPA
+        script: xcode-project build-ipa --project "ThreeOneOSFive.xcodeproj" --scheme "3105"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vista previa 3105 RX7</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px; color: #f7f8fc; background: #111; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color-scheme: dark; }
+    .phone { width: min(100%, 390px); height: min(844px, calc(100vh - 32px)); overflow: hidden; border: 1px solid #ffffff22; border-radius: 34px; background: #050505; box-shadow: 0 25px 80px #000a; position:relative; }
+    .login { height: 100%; padding: 20px 22px; display: flex; flex-direction: column; justify-content: flex-start; gap: 0; overflow: auto; background: radial-gradient(ellipse at 50% 18%,#56331a26,transparent 40%); }
+    .brand-bar { margin-bottom: 12px; }
+    .brand-bar { display:flex; align-items:center; justify-content:space-between; padding:0 3px; color:#ffffffdf; font:800 11px ui-monospace,monospace; letter-spacing:1.4px; }
+    .brand-bar small { color:#ffffff65; font-size:9px; font-weight:500; letter-spacing:1px; }
+    .brand-dot { display:inline-block; width:7px; height:7px; margin-right:8px; border-radius:50%; background:#ffc45d; box-shadow:0 0 10px #ffb23e; }
+    .logo { height: 180px; flex: none; margin:0 -2px 8px; background: url("/assets/BrandLogo.png") center / contain no-repeat; filter:drop-shadow(0 10px 22px #f5912720); }
+    .card { padding: 12px 2px; border: 0; border-radius: 0; background: transparent; box-shadow:none; }
+    .eyebrow { margin-bottom:8px; color:#ffc45d; font:800 9px ui-monospace,monospace; letter-spacing:1.5px; }
+    h1 { margin: 0; text-align: left; font-size: 22px; letter-spacing: -.3px; }
+    .subtitle { margin: 7px 0 12px; color: #ffffff9c; font-size:12px; line-height:1.45; }
+    .label { display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; color: #ffffffdc; font: 800 9px ui-monospace,monospace; letter-spacing: 1px; }
+    .key-badge { color:#ffc45d; font-size:8px; letter-spacing:.6px; }
+    .key { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 10px; border: 1px solid #ffffff55; border-radius: 0; background: transparent; }
+    .key-icon { display:grid; place-items:center; width:26px; height:26px; border:1px solid #ffffff29; color:#ffc45d; font-size:13px; }
+    .key input { flex: 1; min-width: 0; color: white; border: 0; outline: 0; background: transparent; font: 14px ui-monospace,monospace; }
+    .key input::placeholder { color: #ffffff70; }
+    button { color: inherit; cursor: pointer; font: inherit; }
+    .key-help { margin:8px 1px 11px; color:#ffffff75; font-size:9px; line-height:1.4; }
+    .access-error { display:none; margin:8px 1px 0; color:#ff7777; font-size:11px; line-height:1.4; }
+    .access-error.show { display:block; }
+    .enter { width:100%; min-height: 44px; border: 0; border-radius: 0; background: linear-gradient(105deg,#ffd477,#f47a2b); color:#211409; font:800 10px ui-monospace,monospace; letter-spacing:1.6px; box-shadow:0 8px 24px #f19a3526; }
+    .enter:disabled { cursor:wait; opacity:.72; }
+    .note { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:auto; padding-top:12px; color: #ffffff70; text-align: center; font-size: 9px; }
+    .panel { display: none; height: 100%; flex-direction: column; }
+    .scroll { flex: 1; overflow: auto; padding: 18px 17px; }
+    .status { padding: 10px 2px; font: 800 10px ui-monospace,monospace; letter-spacing: .7px; }
+    .status span { color: #41df88; }
+    .logout { float: right; border: 0; background: transparent; }
+    .hero { display: flex; align-items: center; gap: 12px; margin: 17px 0; padding: 13px 2px; border-bottom: 1px solid #39c9ed40; }
+    .hero img { width: 54px; height: 54px; object-fit: cover; border-radius: 4px; }
+    .hero strong { font-size: 18px; }
+    .hero small { display: block; margin-top: 4px; color: #ffffff8b; }
+    .section-head { display: flex; justify-content: space-between; margin: 18px 0 10px; color: #ffffff90; font: 800 10px ui-monospace,monospace; letter-spacing: 1.1px; }
+    .count { color: #bc67ff; }
+    .categories { display: grid; gap: 10px; }
+    .category { width:100%; min-height: 58px; padding: 9px 2px; display:flex; align-items:center; gap:11px; text-align:left; border:0; border-bottom:1px solid #ffffff24; border-radius:0; background:transparent; color:#ffffff; }
+    .category.active { border-bottom-color:#b342ffcc; }
+    .category-icon { width:35px; height:35px; display:grid; place-items:center; border-radius:4px; color:#b650fa; background:#9b31e822; font-size:15px; }
+    .category-name { display:block; font-size:12px; font-weight:850; letter-spacing:.4px; }
+    .category-count { display:block; margin-top:3px; color:#ffffff75; font:800 8px ui-monospace,monospace; letter-spacing:.6px; }
+    .chevron { margin-left:auto; color:#ffffff90; transition:transform .16s; }
+    .category.active .chevron { transform:rotate(180deg); }
+    .options { display: grid; gap: 8px; margin: 0 0 3px 11px; }
+    .option { min-height: 64px; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #ffffff16; border-radius: 17px; background: #0c101def; }
+    .glyph { width: 35px; height: 35px; flex: none; display: grid; place-items: center; border-radius: 12px; color: #b650fa; background: #9b31e822; }
+    .name { font-size: 12px; font-weight: 850; }
+    .hint { margin-top: 4px; color: #ffffff75; font: 800 8px ui-monospace,monospace; letter-spacing: .5px; }
+    .switch { width: 38px; height: 22px; flex: none; margin-left: auto; padding: 3px; border: 0; border-radius: 20px; background: #383b48; }
+    .switch::after { content:""; display:block; width:16px; height:16px; border-radius:50%; background:white; transition:transform .15s; }
+    .switch.on { background:#9635df; }
+    .switch.on::after { transform:translateX(16px); }
+    .footer { padding: 12px 16px; background: #03060ceF; color: #ffffff9a; font-size: 10px; line-height: 1.4; }
+    .footer b { color:#39c9ed; }
+    .toast { position:absolute; z-index:2; top:14px; left:14px; right:14px; padding:12px 14px; display:none; align-items:center; gap:11px; border:1px solid #47cde966; border-radius:18px; background:#111a27ed; box-shadow:0 12px 30px #0009; backdrop-filter:blur(15px); }
+    .toast.show { display:flex; animation:toast-in .22s ease-out; }
+    .toast-icon { color:#42d1e9; font-size:22px; }
+    .toast-label { color:#45cbe8; font:800 8px ui-monospace,monospace; letter-spacing:1.2px; }
+    .toast-title { margin-top:3px; font-size:11px; font-weight:900; }
+    .toast-option { margin-top:3px; color:#ffffffad; font-size:11px; }
+    @keyframes toast-in { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-icon">✓</span><div><div class="toast-label">VISTA PREVIA</div><div class="toast-title" id="toast-title"></div><div class="toast-option" id="toast-option"></div></div></div>
+    <section class="login" id="login">
+      <div class="brand-bar"><span><i class="brand-dot"></i>DRT PANEL</span><small>DRT 10</small></div>
+      <div class="logo" role="img" aria-label="Logo completo DRT IOS"></div>
+      <div class="card">
+        <div class="eyebrow">EL MEJOR ACCESO DRT IOS</div>
+        <h1>Bienvenido a DRT</h1>
+        <p class="subtitle">Introduce la key que te otorgó el creador de DRT iOS.</p>
+        <div class="label"><span>⚿ &nbsp; KEY DE ACCESO</span><span class="key-badge">● KEY PERSONAL</span></div>
+        <div class="key"><span class="key-icon">⚿</span><input id="key" autocomplete="off" autocapitalize="characters" placeholder="DRT EXTERNAL XXXXX" aria-describedby="access-error"></div>
+        <p class="key-help">Tu key es personal. Si no la tienes, solicítala a quien te la otorgó.</p>
+        <p class="access-error" id="access-error" role="alert" aria-live="polite"></p>
+        <button class="enter" id="enter-button" onclick="enter()">CONTINUAR &nbsp; →</button>
+      </div>
+      <div class="note">▣ &nbsp; PANEL DE ACCESO · LICENCIA VERIFICADA POR SERVIDOR</div>
+    </section>
+    <section class="panel" id="panel">
+      <div class="scroll">
+        <div class="status"><span>●</span> &nbsp; DRT IOS EL PAPÁ DE LOS POLLITOS <button class="logout" onclick="logout()" aria-label="Cerrar sesión">⇥</button></div>
+        <div class="hero"><img src="/assets/BrandLogo.png" alt=""><div><strong>PANEL RX7</strong><small>Toca un apartado para ver sus opciones</small></div></div>
+        <div class="section-head"><span>APARTADOS</span><span class="count">TOCA PARA VER</span></div>
+        <div class="categories" id="categories"></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const verifyURL = window.location.protocol === "file:"
+      ? "http://127.0.0.1:5001/verify"
+      : new URL("/verify", window.location.href).href;
+    const data = [
+      ["HOLO ARMAS","✧",["HOLOGRAMA TOCINO","HOLOGRAMA RGB","HOLOGRAMA CUADROS"]],
+      ["HOLOGRAMA PJ","♟",["HOLOGRAMA BOX 3D"]],
+      ["AIMBOTS CON ANTENA","≡",["AIMBOT PECHO ","AIMBOT HEAD","AIMBOT DRAG","AIMBOT CUELLO"]]
+    ];
+    const expanded = new Set([0]);
+    const enabled = new Set();
+    let toastTimer;
+    let isVerifying = false;
+    const keyInput = document.getElementById("key");
+    const enterButton = document.getElementById("enter-button");
+    const accessError = document.getElementById("access-error");
+    keyInput.addEventListener("input", () => {
+      accessError.textContent = "";
+      accessError.classList.remove("show");
+    });
+    function draw() {
+      document.getElementById("categories").innerHTML = data.map(([name,icon,items],i)=>`
+        <button class="category ${expanded.has(i)?'active':''}" onclick="toggleCategory(${i})" aria-expanded="${expanded.has(i)}">
+          <span class="category-icon">${icon}</span>
+          <span><span class="category-name">${name}</span><span class="category-count">${items.length} OPCIONES</span></span>
+          <span class="chevron">⌄</span>
+        </button>
+        ${expanded.has(i)?`<div class="options">${items.map(item=>`<div class="option"><div class="glyph">✥</div><div><div class="name">${item}</div><div class="hint">${enabled.has(item)?"SELECCIONADO":"TOCA PARA ACTIVAR"}</div></div><button class="switch ${enabled.has(item)?"on":""}" aria-label="Interruptor ${item}" aria-pressed="${enabled.has(item)}" onclick='toggleOption(event,${JSON.stringify(item)})'></button></div>`).join("")}</div>`:""}
+      `).join("");
+    }
+    function toggleCategory(index) { expanded.has(index)?expanded.delete(index):expanded.add(index); draw(); }
+    function toggleOption(event,item) {
+      event.stopPropagation();
+      const button=event.currentTarget;
+      const row=button.closest(".option");
+      const on=enabled.has(item);
+      on?enabled.delete(item):enabled.add(item);
+      button.classList.toggle("on",!on);
+      button.setAttribute("aria-pressed",String(!on));
+      row.querySelector(".hint").textContent=on?"TOCA PARA ACTIVAR":"SELECCIONADO";
+      showNotice(`DRT IOS ${on?"DESACTIVADO":"ACTIVADO"}`,item);
+    }
+    function showNotice(title,option) {
+      const toast=document.getElementById("toast");
+      document.getElementById("toast-title").textContent=title;
+      document.getElementById("toast-option").textContent=option;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer=setTimeout(()=>toast.classList.remove("show"),2700);
+    }
+    function deviceID() {
+      const storageKey = "drt.preview.device_id";
+      let id = localStorage.getItem(storageKey);
+      if (!id) {
+        id = globalThis.crypto?.randomUUID?.()
+          ?? `preview-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        localStorage.setItem(storageKey, id);
+      }
+      return id;
+    }
+    function showAccessError(message) {
+      accessError.textContent = message;
+      accessError.classList.add("show");
+    }
+    async function enter() {
+      if (isVerifying) return;
+      const key = keyInput.value.trim().toUpperCase();
+      if (!/^DRT EXTERNAL [A-Z0-9]{5}$/.test(key)) {
+        showAccessError("Formato esperado: DRT EXTERNAL XXXXX.");
+        keyInput.focus();
+        return;
+      }
+
+      isVerifying = true;
+      enterButton.disabled = true;
+      enterButton.textContent = "VERIFICANDO…";
+      accessError.classList.remove("show");
+      const controller = new AbortController();
+      const timeoutID = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(verifyURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({ key, device_id: deviceID() }),
+          signal: controller.signal
+        });
+        const result = await response.json().catch(() => ({}));
+
+        if (result.status === "invalid") {
+          showAccessError("La licencia no es válida o no fue generada por el bot.");
+          return;
+        }
+        if (response.status === 403 || result.status === "expired") {
+          showAccessError("La licencia expiró o ya fue utilizada en otro equipo.");
+          return;
+        }
+        if (response.status === 404) {
+          showAccessError("El servidor no encontró /verify. Revisa la URL del servidor y que esté desplegada la versión correcta.");
+          return;
+        }
+        if (!response.ok || result.status !== "success") {
+          showAccessError(result.message || "El servidor rechazó la licencia.");
+          return;
+        }
+
+        document.getElementById("login").style.display = "none";
+        document.getElementById("panel").style.display = "flex";
+        draw();
+      } catch {
+        showAccessError("No se pudo contactar al servidor. Comprueba que esté disponible.");
+      } finally {
+        clearTimeout(timeoutID);
+        isVerifying = false;
+        enterButton.disabled = false;
+        enterButton.textContent = "CONTINUAR  →";
+      }
+    }
+    function logout() {
+      document.getElementById("panel").style.display="none";
+      document.getElementById("login").style.display="flex";
+    }
+  </script>
+</body>
+</html>
