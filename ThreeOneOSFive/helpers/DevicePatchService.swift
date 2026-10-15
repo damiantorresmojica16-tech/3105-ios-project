@@ -31,11 +31,18 @@ enum DevicePatchService {
         guard project.rules.count == 1, let sourceRule = project.rules.first else {
             throw PatchPackageError.invalidProject
         }
-        _ = try PatchPathValidator.canonicalBundleIdentifier(sourceRule.bundleID)
         let targetPath = try PatchPathValidator.canonicalRelativePath(targetRelativePath)
+        let documentsPrefix = "Documents/"
+        guard targetPath.hasPrefix(documentsPrefix),
+              targetPath.hasPrefix("Documents/contentcache/"),
+              let bundleID = Bundle.main.bundleIdentifier,
+              (try? PatchPathValidator.canonicalBundleIdentifier(bundleID)) == bundleID else {
+            throw PatchPackageError.invalidProject
+        }
 
         var targetRule = sourceRule
-        targetRule.relativePath = targetPath
+        targetRule.bundleID = bundleID
+        targetRule.relativePath = String(targetPath.dropFirst(documentsPrefix.count))
         return PatchProject(
             id: project.id,
             name: project.name,
@@ -43,7 +50,7 @@ enum DevicePatchService {
             isPrivate: project.isPrivate,
             createdAt: project.createdAt,
             updatedAt: project.updatedAt,
-            bundleIdentifiers: [sourceRule.bundleID],
+            bundleIdentifiers: [bundleID],
             directories: [],
             rules: [targetRule]
         )
@@ -118,6 +125,29 @@ enum DevicePatchService {
         var roots: [String: URL] = [:]
 
         for bundleID in bundleIDs {
+            if bundleID == Bundle.main.bundleIdentifier {
+                do {
+                    let documentsURL = try FileManager.default.url(
+                        for: .documentDirectory,
+                        in: .userDomainMask,
+                        appropriateFor: nil,
+                        create: true
+                    )
+                    var isDirectory: ObjCBool = false
+                    guard FileManager.default.fileExists(
+                        atPath: documentsURL.path,
+                        isDirectory: &isDirectory
+                    ), isDirectory.boolValue else {
+                        throw PatchPackageError.internalDocumentsUnavailable
+                    }
+                    roots[bundleID] = PatchPathValidator.canonicalFileURL(documentsURL)
+                    continue
+                } catch let error as PatchPackageError {
+                    throw error
+                } catch {
+                    throw PatchPackageError.internalDocumentsUnavailable
+                }
+            }
             guard let path = ContainerStore.resolveAppContainerPath(bundleID: bundleID),
                   ContainerStore.isApplicationContainerPath(path) else {
                 throw PatchPackageError.targetAppUnavailable(bundleID)

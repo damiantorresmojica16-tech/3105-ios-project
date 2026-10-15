@@ -224,6 +224,7 @@
 "patch.error.replacement_required" = "Hãy chọn tệp thay thế cho mọi đường dẫn đích trước khi lưu.";
 "patch.error.keychain" = "Không thể lưu hoặc đọc khóa mở gói một cách an toàn.";
 "patch.error.app_unavailable" = "Bundle app %@ chưa được cài hoặc không thể mở. Patch chưa thay đổi file nào.";
+"patch.error.internal_documents_unavailable" = "Không thể truy cập thư mục Documents của 3105. Không có file patch nào bị thay đổi.";
 "patch.error.target_occupied" = "Đường dẫn %@ đã được một dự án patch khác áp dụng. Hãy khôi phục patch đó trước khi áp dụng patch này.";
 "patch.error.already_applied" = "Patch này đang hoạt động. Hãy đặt lại theo gói hoặc khôi phục file gốc trước khi Apply lại.";
 "patch.error.restore_targets_changed" = "Các file sau đã thay đổi sau khi Apply và cần xác nhận trước khi khôi phục:\n%@";

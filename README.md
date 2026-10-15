@@ -83,6 +83,7 @@ Unlisted iOS 27 builds are marked unsupported rather than assumed compatible. Th
 - SideStore, AltStore, 3uTools, and LiveContainer are not supported installation paths for this project.
 - The app uses the project-owned bundle identifier `com.damian.ios3105project`. It is not configured for the MHA-C2 bundle-identity workflow.
 - The source tree does not contain certificates, provisioning profiles, signed applications, or IPA files; release assets may provide an unsigned IPA.
+- RX7 panel configuration profiles target only 3105's own Documents `contentcache` directory. They do not search for or modify another app's container.
 
 ### Building an enterprise IPA with Codemagic
 

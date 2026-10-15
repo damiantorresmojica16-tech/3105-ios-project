@@ -224,6 +224,7 @@
 "patch.error.replacement_required" = "保存前，请为每个目标路径选择替换文件。";
 "patch.error.keychain" = "无法安全保存或读取已记住的解锁密钥。";
 "patch.error.app_unavailable" = "未安装应用 bundle %@，或无法打开该应用。未更改任何补丁文件。";
+"patch.error.internal_documents_unavailable" = "无法访问 3105 的 Documents 文件夹。未更改任何补丁文件。";
 "patch.error.target_occupied" = "目标 %@ 已被另一个补丁项目占用。请先恢复该补丁，再应用此补丁。";
 "patch.error.already_applied" = "此补丁已生效。请先重置软件包状态或恢复原始文件，再次应用。";
 "patch.error.restore_targets_changed" = "以下文件在应用补丁后发生更改，恢复前需要确认：\n%@";

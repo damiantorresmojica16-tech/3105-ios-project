@@ -179,6 +179,7 @@ enum PatchPackageError: Error, Equatable {
     case invalidProject
     case keychainFailed
     case targetAppUnavailable(String)
+    case internalDocumentsUnavailable
     case symbolicLinkUnsupported
     case targetOccupied(String)
     case projectAlreadyApplied
@@ -206,6 +207,7 @@ extension PatchPackageError: LocalizedError {
         case .invalidProject: return "patch.error.invalid_project"
         case .keychainFailed: return "patch.error.keychain"
         case .targetAppUnavailable: return "patch.error.app_unavailable"
+        case .internalDocumentsUnavailable: return "patch.error.internal_documents_unavailable"
         case .targetOccupied: return "patch.error.target_occupied"
         case .projectAlreadyApplied: return "patch.error.already_applied"
         case .restoreTargetsChanged: return "patch.error.restore_targets_changed"
