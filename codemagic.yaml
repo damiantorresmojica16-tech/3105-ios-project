@@ -1,4 +1,55 @@
 workflows:
+  ios-unsigned-ipa:
+    name: 3105 Unsigned IPA
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      groups:
+        - license_config
+    scripts:
+      - name: Configure license verification endpoint
+        script: |
+          if [ -z "${DRT_LICENSE_VERIFY_URL:-}" ]; then
+            echo "Set DRT_LICENSE_VERIFY_URL in the license_config environment group."
+            exit 1
+          fi
+          case "$DRT_LICENSE_VERIFY_URL" in
+            https://*/verify) ;;
+            *)
+              echo "DRT_LICENSE_VERIFY_URL must be an HTTPS URL ending in /verify."
+              exit 1
+              ;;
+          esac
+          /usr/libexec/PlistBuddy -c "Set :DRTLicenseVerifyURL $DRT_LICENSE_VERIFY_URL" ThreeOneOSFive/Info.plist
+      - name: Build unsigned iOS app
+        script: |
+          xcodebuild \
+            -project "ThreeOneOSFive.xcodeproj" \
+            -scheme "3105" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath build/ios/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+      - name: Package unsigned IPA
+        script: |
+          APP_PATH="build/ios/DerivedData/Build/Products/Release-iphoneos/3105.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "The unsigned iOS app was not produced at $APP_PATH."
+            exit 1
+          fi
+          mkdir -p build/ios/ipa/Payload
+          ditto "$APP_PATH" build/ios/ipa/Payload/3105.app
+          ditto -c -k --sequesterRsrc --keepParent build/ios/ipa/Payload build/ios/ipa/3105-unsigned.ipa
+          unzip -l build/ios/ipa/3105-unsigned.ipa
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
   ios-enterprise-ipa:
     name: 3105 Enterprise IPA
     max_build_duration: 120

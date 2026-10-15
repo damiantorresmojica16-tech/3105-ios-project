@@ -79,14 +79,18 @@ Unlisted iOS 27 builds are marked unsupported rather than assumed compatible. Th
 
 ## Installation notes
 
-- Device functionality requires signing with an **enterprise certificate**.
-- SideStore, AltStore, 3uTools, and LiveContainer are not supported installation paths.
+- The unsigned IPA must be signed before iOS can install it. Device-level functionality requires signing with an **enterprise certificate**.
+- SideStore, AltStore, 3uTools, and LiveContainer are not supported installation paths for this project.
 - The app uses the project-owned bundle identifier `com.damian.ios3105project`. It is not configured for the MHA-C2 bundle-identity workflow.
 - The source tree does not contain certificates, provisioning profiles, signed applications, or IPA files; release assets may provide an unsigned IPA.
 
 ### Building an enterprise IPA with Codemagic
 
 The [`codemagic.yaml`](./codemagic.yaml) workflow builds the `3105` scheme and exports a signed IPA. Connect this repository to Codemagic, create an environment-variable group named `license_config` with `DRT_LICENSE_VERIFY_URL` set to the public HTTPS `/verify` endpoint, and upload an enterprise `.p12` certificate (including its private key) plus a matching `.mobileprovision` profile under **Code signing identities**. The profile must support `com.damian.ios3105project` and the enterprise distribution type. The build stops if the HTTPS endpoint is missing, so the IPA is not silently configured to call localhost. Do not commit signing files or passwords to the repository.
+
+### Building an unsigned IPA for on-device signing
+
+The `ios-unsigned-ipa` workflow builds the `3105` scheme with code signing disabled and packages the `.app` as `build/ios/ipa/3105-unsigned.ipa`. Select this workflow in Codemagic to download the artifact without uploading a certificate there. An unsigned IPA cannot be installed as-is: sign it with a compatible iOS signing app and a valid certificate/profile for `com.damian.ios3105project`. The signing method and certificate must support the intended installation and the app's required entitlements; this build does not provide or bypass those requirements.
 
 ### Hosting the license API on Render
 
