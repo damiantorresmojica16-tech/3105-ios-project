@@ -74,7 +74,7 @@ Những build không có trong bảng sẽ được đánh dấu là không hỗ
 
 - Các chức năng trên thiết bị yêu cầu ứng dụng được ký bằng **chứng chỉ doanh nghiệp**.
 - Không hỗ trợ SideStore, AltStore, 3uTools hoặc LiveContainer.
-- Bundle ID `com.apple.mobile.MobileHouseArrest` được giữ có chủ đích cho luồng MHA-C2.
+- Ứng dụng dùng Bundle ID riêng của dự án `com.damian.ios3105project`; không cấu hình theo luồng MHA-C2.
 - Cây mã nguồn không chứa chứng chỉ, provisioning profile, ứng dụng đã ký hoặc IPA; phần Release có thể cung cấp IPA unsigned.
 
 ## Tác giả và ghi công

@@ -81,16 +81,16 @@ Unlisted iOS 27 builds are marked unsupported rather than assumed compatible. Th
 
 - Device functionality requires signing with an **enterprise certificate**.
 - SideStore, AltStore, 3uTools, and LiveContainer are not supported installation paths.
-- The target bundle identifier is intentionally `com.apple.mobile.MobileHouseArrest`; changing it can break the MHA-C2 app-container workflow.
+- The app uses the project-owned bundle identifier `com.damian.ios3105project`. It is not configured for the MHA-C2 bundle-identity workflow.
 - The source tree does not contain certificates, provisioning profiles, signed applications, or IPA files; release assets may provide an unsigned IPA.
 
 ### Building an enterprise IPA with Codemagic
 
-The [`codemagic.yaml`](./codemagic.yaml) workflow builds the `3105` scheme and exports a signed IPA. Connect this repository to Codemagic, create an environment-variable group named `license_config` with `DRT_LICENSE_VERIFY_URL` set to the public HTTPS `/verify` endpoint, and upload the enterprise `.p12` certificate (including its private key) plus a matching `.mobileprovision` profile under **Code signing identities**. The profile must support `com.apple.mobile.MobileHouseArrest` and the enterprise distribution type. The build stops if the HTTPS endpoint is missing, so the IPA is not silently configured to call localhost. Do not commit signing files or passwords to the repository.
+The [`codemagic.yaml`](./codemagic.yaml) workflow builds the `3105` scheme and exports a signed IPA. Connect this repository to Codemagic, create an environment-variable group named `license_config` with `DRT_LICENSE_VERIFY_URL` set to the public HTTPS `/verify` endpoint, and upload an enterprise `.p12` certificate (including its private key) plus a matching `.mobileprovision` profile under **Code signing identities**. The profile must support `com.damian.ios3105project` and the enterprise distribution type. The build stops if the HTTPS endpoint is missing, so the IPA is not silently configured to call localhost. Do not commit signing files or passwords to the repository.
 
 ### Hosting the license API on Render
 
-Create a Render Blueprint from `render.yaml`. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_ADMIN_ID` as Render environment variables; do not commit them. The included free service stores its SQLite database at `/tmp/keys.db`, which is ephemeral and may be cleared when the service restarts or redeploys. The local `keys.db` is intentionally excluded from Git because it contains license records. Once Render provides the public service URL, set `DRT_LICENSE_VERIFY_URL` in Codemagic's `license_config` group to that URL ending in `/verify`.
+Create a Render Blueprint from `render.yaml`. The license API runs without starting the Telegram bot by default. To enable the bot, set `ENABLE_TELEGRAM_BOT` to `true` and add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_ADMIN_ID` as Render environment variables; use a dedicated bot token so the existing deployment is not interrupted by Telegram polling conflicts. Never commit these values. The included free service stores its SQLite database at `/tmp/keys.db`, which is ephemeral and may be cleared when the service restarts or redeploys. The local `keys.db` is intentionally excluded from Git because it contains license records. Once Render provides the public service URL, set `DRT_LICENSE_VERIFY_URL` in Codemagic's `license_config` group to that URL ending in `/verify`.
 
 ## Project layout
 

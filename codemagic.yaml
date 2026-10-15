@@ -9,7 +9,7 @@ workflows:
         - license_config
       ios_signing:
         distribution_type: enterprise
-        bundle_identifier: com.apple.mobile.MobileHouseArrest
+        bundle_identifier: com.damian.ios3105project
     scripts:
       - name: Configure license verification endpoint
         script: |

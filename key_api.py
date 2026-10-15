@@ -284,30 +284,39 @@ def preview_brand_logo():
 
 
 def main():
+    init_db()
+    port = int(os.environ.get("PORT", 5000))
+    server_options = {
+        "host": "0.0.0.0",
+        "port": port,
+    }
+
+    if os.environ.get("ENABLE_TELEGRAM_BOT", "").lower() not in {
+        "1",
+        "true",
+        "yes",
+    }:
+        serve(app, **server_options)
+        return
+
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     admin_id_value = os.environ.get("TELEGRAM_ADMIN_ID")
     if not token or not admin_id_value:
         raise RuntimeError(
-            "Configura TELEGRAM_BOT_TOKEN y TELEGRAM_ADMIN_ID en el entorno."
+            "Configura TELEGRAM_BOT_TOKEN y TELEGRAM_ADMIN_ID antes de activar "
+            "ENABLE_TELEGRAM_BOT."
         )
     try:
         admin_id = int(admin_id_value)
     except ValueError as error:
         raise RuntimeError("TELEGRAM_ADMIN_ID debe ser un número entero.") from error
 
-    init_db()
     bot = create_bot(token, admin_id)
-
-    # Configuración de puerto compatible con Render (lee la variable PORT de entorno)
-    port = int(os.environ.get("PORT", 5000))
 
     server_thread = threading.Thread(
         target=serve,
         args=(app,),
-        kwargs={
-            "host": "0.0.0.0",
-            "port": port,
-        },
+        kwargs=server_options,
         daemon=True,
     )
     server_thread.start()

@@ -10,5 +10,7 @@ services:
         sync: false
       - key: TELEGRAM_ADMIN_ID
         sync: false
+      - key: ENABLE_TELEGRAM_BOT
+        value: "false"
       - key: KEYS_DB_PATH
         value: /tmp/keys.db

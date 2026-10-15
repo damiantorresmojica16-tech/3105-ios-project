@@ -481,7 +481,7 @@
 				);
 				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = "-lz";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.apple.mobile.MobileHouseArrest";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.damian.ios3105project";
 				PRODUCT_NAME = 3105;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "ThreeOneOSFive/ThreeOneOSFive-Bridging-Header.h";
@@ -515,7 +515,7 @@
 				);
 				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = "-lz";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.apple.mobile.MobileHouseArrest";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.damian.ios3105project";
 				PRODUCT_NAME = 3105;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "ThreeOneOSFive/ThreeOneOSFive-Bridging-Header.h";
