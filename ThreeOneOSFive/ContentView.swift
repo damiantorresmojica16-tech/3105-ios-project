@@ -770,6 +770,7 @@ struct ContentView: View {
         Task {
             do {
                 let result = try await Task.detached(priority: .userInitiated) {
+                    try LimitedCleanerService.cleanOwnTemporaryData()
                     var restoredOptions: [String] = []
                     if enabled {
                         let project = item.summary.schemaVersion >= 2 && item.canInspectContents
@@ -871,6 +872,7 @@ struct ContentView: View {
         Task {
             do {
                 try await Task.detached(priority: .userInitiated) {
+                    try LimitedCleanerService.cleanOwnTemporaryData()
                     guard let receipt = DevicePatchService.latestReceipt(projectID: projectID) else {
                         throw PatchPackageError.invalidProject
                     }

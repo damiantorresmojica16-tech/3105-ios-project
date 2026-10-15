@@ -105,6 +105,9 @@
 "cleaner.confirm_action" = "Clean Now";
 "cleaner.result_title" = "Cleanup Finished";
 "cleaner.result_message" = "Freed %@ by removing %lld files. %lld items or apps could not be cleaned.";
+"cleaner.error.unsafe_container" = "The app container could not be verified, so temporary files were not cleaned.";
+"cleaner.error.own_container_unavailable" = "3105's own app container is unavailable, so the patch was not changed.";
+"cleaner.error.incomplete" = "Could not remove %lld temporary items. The patch was not changed.";
 "cleaner.accessibility_selected" = "Selected";
 "cleaner.accessibility_not_selected" = "Not selected";
 "cleaner.sort" = "Sort by size";

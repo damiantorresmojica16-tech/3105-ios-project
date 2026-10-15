@@ -105,6 +105,9 @@
 "cleaner.confirm_action" = "Dọn ngay";
 "cleaner.result_title" = "Đã dọn xong";
 "cleaner.result_message" = "Đã giải phóng %@ và xóa %lld tệp. Có %lld mục hoặc ứng dụng không thể dọn.";
+"cleaner.error.unsafe_container" = "Không thể xác minh vùng chứa ứng dụng nên không dọn tệp tạm.";
+"cleaner.error.own_container_unavailable" = "Không thể truy cập vùng chứa ứng dụng của 3105 nên không thay đổi bản vá.";
+"cleaner.error.incomplete" = "Không thể xóa %lld mục tạm. Bản vá không bị thay đổi.";
 "cleaner.accessibility_selected" = "Đã chọn";
 "cleaner.accessibility_not_selected" = "Chưa chọn";
 "cleaner.sort" = "Sắp xếp theo dung lượng";

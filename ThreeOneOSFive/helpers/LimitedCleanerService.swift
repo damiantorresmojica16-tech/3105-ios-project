@@ -30,6 +30,22 @@ struct LimitedCleanerResult: Equatable {
 
 enum LimitedCleanerError: Error, Equatable {
     case unsafeContainerRoot
+    case ownContainerUnavailable
+    case cleanupIncomplete(Int)
+}
+
+extension LimitedCleanerError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .unsafeContainerRoot:
+            return String(localized: "cleaner.error.unsafe_container")
+        case .ownContainerUnavailable:
+            return String(localized: "cleaner.error.own_container_unavailable")
+        case .cleanupIncomplete(let count):
+            let message = String(localized: "cleaner.error.incomplete")
+            return String(format: message, Int64(count))
+        }
+    }
 }
 
 enum LimitedCleanerService {
@@ -38,6 +54,38 @@ enum LimitedCleanerService {
     /// This explicit allowlist is the product boundary. Do not add global `/var`
     /// paths here: this cleaner is intentionally limited to per-app disposable data.
     static let allowedRelativeDirectories = ["Library/Caches", "tmp"]
+
+    @discardableResult
+    static func cleanOwnTemporaryData() throws -> LimitedCleanerResult {
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier,
+              !bundleIdentifier.isEmpty,
+              let documentsURL = FileManager.default.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+              ).first else {
+            throw LimitedCleanerError.ownContainerUnavailable
+        }
+
+        let standardizedDocumentsURL = documentsURL.standardizedFileURL
+        guard standardizedDocumentsURL.isFileURL,
+              standardizedDocumentsURL.lastPathComponent == "Documents" else {
+            throw LimitedCleanerError.ownContainerUnavailable
+        }
+
+        let containerRoot = standardizedDocumentsURL.deletingLastPathComponent()
+        guard containerRoot.path.hasPrefix("/"),
+              containerRoot.path != "/" else {
+            throw LimitedCleanerError.ownContainerUnavailable
+        }
+
+        let result = try clean(containerURL: containerRoot) { candidate in
+            candidate.standardizedFileURL.path == containerRoot.path
+        }
+        guard result.failedItemCount == 0 else {
+            throw LimitedCleanerError.cleanupIncomplete(result.failedItemCount)
+        }
+        return result
+    }
 
     static func scan(
         containerURL: URL,

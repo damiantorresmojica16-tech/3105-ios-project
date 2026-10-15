@@ -105,6 +105,9 @@
 "cleaner.confirm_action" = "立即清理";
 "cleaner.result_title" = "清理完成";
 "cleaner.result_message" = "已释放 %@，删除 %lld 个文件。有 %lld 个项目或应用无法清理。";
+"cleaner.error.unsafe_container" = "无法验证应用容器，因此未清理临时文件。";
+"cleaner.error.own_container_unavailable" = "无法访问 3105 自身的应用容器，因此未更改补丁。";
+"cleaner.error.incomplete" = "无法删除 %lld 个临时项目。补丁未更改。";
 "cleaner.accessibility_selected" = "已选择";
 "cleaner.accessibility_not_selected" = "未选择";
 "cleaner.sort" = "按大小排序";
