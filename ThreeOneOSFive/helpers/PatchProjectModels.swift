@@ -188,6 +188,7 @@ enum PatchPackageError: Error, Equatable {
     case privatePatchRequiresPassword
     case privateOperationFailed
     case applyFailed
+    case applyFailedAfterReplacement
     case restoreFailed
     case resetFailed
     case invalidImportLink
@@ -216,6 +217,7 @@ extension PatchPackageError: LocalizedError {
         case .privatePatchRequiresPassword: return "patch.error.private_password"
         case .privateOperationFailed: return "patch.error.private_operation"
         case .applyFailed: return "patch.error.apply"
+        case .applyFailedAfterReplacement: return "patch.error.apply_after_replacement"
         case .restoreFailed: return "patch.error.restore"
         case .resetFailed: return "patch.error.reset"
         case .invalidImportLink: return "patch.error.invalid_import_link"

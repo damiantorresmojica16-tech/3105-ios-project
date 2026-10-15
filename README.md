@@ -84,6 +84,7 @@ Unlisted iOS 27 builds are marked unsupported rather than assumed compatible. Th
 - The app uses the project-owned bundle identifier `com.damian.ios3105project`. It is not configured for the MHA-C2 bundle-identity workflow.
 - The source tree does not contain certificates, provisioning profiles, signed applications, or IPA files; release assets may provide an unsigned IPA.
 - RX7 panel configuration profiles target only 3105's own Documents `contentcache` directory. They do not search for or modify another app's container.
+- Multiple patch packages may target the same file. Applying a new package restores any overlapping active package first; if an overlapping file was modified externally, the switch is refused until that change is reviewed. Restoring the new package returns the target to its original file state.
 
 ### Building an enterprise IPA with Codemagic
 

@@ -519,6 +519,47 @@ enum PatchTransaction {
         }
     }
 
+    static func activeReceipts(
+        overlapping project: PatchProject,
+        backupRoot: URL,
+        excludingProjectID: UUID? = nil,
+        fileManager: FileManager = .default
+    ) throws -> [PatchTransactionReceipt] {
+        let requestedTargets = Set(project.rules.map {
+            $0.bundleID + "\0" + $0.relativePath
+        })
+        guard !requestedTargets.isEmpty else { return [] }
+
+        let projectDirectories: [URL]
+        do {
+            projectDirectories = try fileManager.contentsOfDirectory(
+                at: backupRoot,
+                includingPropertiesForKeys: [.isDirectoryKey],
+                options: [.skipsHiddenFiles]
+            )
+        } catch {
+            throw PatchPackageError.applyFailed
+        }
+
+        return projectDirectories.compactMap { directory in
+            guard let projectID = UUID(uuidString: directory.lastPathComponent),
+                  projectID != excludingProjectID,
+                  let receipt = latestReceipt(
+                    projectID: projectID,
+                    backupRoot: backupRoot,
+                    fileManager: fileManager
+                  ),
+                  let journal = try? readJournal(receipt.journalURL),
+                  journal.status == .applied || journal.status == .prepared,
+                  journal.records.contains(where: {
+                      requestedTargets.contains($0.bundleID + "\0" + $0.relativePath)
+                  }) else {
+                return nil
+            }
+            return receipt
+        }
+    }
+
     static func appliedTargetKeys(
         backupRoot: URL,
         excludingProjectID: UUID? = nil,

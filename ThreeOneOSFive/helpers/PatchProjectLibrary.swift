@@ -177,27 +177,6 @@ enum PatchProjectLibrary {
         )
     }
 
-    static func overlappingTargetPath(
-        in project: PatchProject,
-        excludingPackageID: UUID,
-        fileManager: FileManager = .default
-    ) -> String? {
-        var occupied = Set<String>()
-        for item in load(fileManager: fileManager) where item.id != excludingPackageID {
-            guard let other = item.project else { continue }
-            for rule in other.rules {
-                occupied.insert(rule.bundleID + "\0" + rule.relativePath)
-            }
-        }
-        for rule in project.rules {
-            let key = rule.bundleID + "\0" + rule.relativePath
-            if occupied.contains(key) {
-                return rule.bundleID + "/" + rule.relativePath
-            }
-        }
-        return nil
-    }
-
     static func installImportedPackage(
         data: Data,
         decoded: DecodedPatchPackage,
@@ -210,16 +189,6 @@ enum PatchProjectLibrary {
             packageID: summary.packageID,
             fileManager: fileManager
         )
-        if let occupiedPath = overlappingTargetPath(
-            in: decoded.project,
-            excludingPackageID: summary.packageID,
-            fileManager: fileManager
-        ) {
-            if decoded.project.isPrivate, !authorCopy {
-                throw PatchPackageError.privateOperationFailed
-            }
-            throw PatchPackageError.targetOccupied(occupiedPath)
-        }
         let previousData = try existingURL.map { try readPackage(at: $0) }
         let originURL = try originFileURL(
             packageID: summary.packageID,

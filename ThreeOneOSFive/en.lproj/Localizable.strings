@@ -231,6 +231,7 @@
 "patch.error.active_delete" = "This patch is still active. Restore its original files before deleting the package.";
 "patch.error.symlink" = "Patch targets cannot pass through symbolic links.";
 "patch.error.apply" = "The patch could not be applied. Any earlier writes were rolled back.";
+"patch.error.apply_after_replacement" = "The new patch could not be applied after switching. The previous patch was restored before the attempt; verify the target before retrying.";
 "patch.error.restore" = "The originals could not be restored safely. No unverified target was overwritten.";
 "patch.error.reset" = "The files could not be reset to the applied package state. Any partial writes were rolled back.";
 "patch.error.invalid_import_link" = "This patch import link is invalid. Use a secure HTTPS link to a .3105 package.";

@@ -231,6 +231,7 @@
 "patch.error.active_delete" = "此补丁仍处于生效状态。删除软件包前，请先恢复原始文件。";
 "patch.error.symlink" = "补丁目标路径不能经过符号链接。";
 "patch.error.apply" = "无法应用补丁。之前的所有写入均已回滚。";
+"patch.error.apply_after_replacement" = "切换后无法应用新补丁。尝试前已恢复之前的补丁；重试前请检查目标文件。";
 "patch.error.restore" = "无法安全恢复原始文件。未覆盖任何未经验证的目标。";
 "patch.error.reset" = "无法将文件重置为应用时的软件包状态。所有部分写入均已回滚。";
 "patch.error.invalid_import_link" = "补丁导入链接无效。请使用指向 .3105 软件包的安全 HTTPS 链接。";

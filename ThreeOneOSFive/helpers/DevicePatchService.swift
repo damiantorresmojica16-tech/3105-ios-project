@@ -10,17 +10,41 @@ enum DevicePatchService {
 
     static func apply(project: PatchProject) throws -> PatchTransactionReceipt {
         let bundleIDs = orderedBundleIdentifiers(in: project)
-        return try withResolvedContainers(bundleIDs: bundleIDs) { roots in
-            try PatchTransaction.apply(
-                project: project,
-                backupRoot: try PatchProjectLibrary.backupRootURL(),
-                containerResolver: { bundleID in
-                    guard let root = roots[bundleID] else {
-                        throw PatchPackageError.targetAppUnavailable(bundleID)
+        let backupRoot = try PatchProjectLibrary.backupRootURL()
+        let conflictingReceipts = try PatchTransaction.activeReceipts(
+            overlapping: project,
+            backupRoot: backupRoot,
+            excludingProjectID: project.id
+        )
+        let inspections = try conflictingReceipts.map {
+            try inspectRestore(receipt: $0)
+        }
+        for inspection in inspections {
+            guard inspection.changedTargets.isEmpty else {
+                throw PatchPackageError.restoreTargetsChanged(
+                    inspection.changedTargets.map(\.displayPath)
+                )
+            }
+        }
+        for receipt in conflictingReceipts {
+            try restore(receipt: receipt)
+        }
+
+        do {
+            return try withResolvedContainers(bundleIDs: bundleIDs) { roots in
+                try PatchTransaction.apply(
+                    project: project,
+                    backupRoot: backupRoot,
+                    containerResolver: { bundleID in
+                        guard let root = roots[bundleID] else {
+                            throw PatchPackageError.targetAppUnavailable(bundleID)
+                        }
+                        return root
                     }
-                    return root
-                }
-            )
+                )
+            }
+        } catch where !conflictingReceipts.isEmpty {
+            throw PatchPackageError.applyFailedAfterReplacement
         }
     }
 

@@ -231,6 +231,7 @@
 "patch.error.active_delete" = "Patch này vẫn đang hoạt động. Hãy khôi phục file gốc trước khi xóa gói.";
 "patch.error.symlink" = "Đường dẫn patch không được đi qua liên kết tượng trưng.";
 "patch.error.apply" = "Không thể áp dụng patch. Mọi file đã ghi trước đó đã được rollback.";
+"patch.error.apply_after_replacement" = "Không thể áp dụng patch mới sau khi chuyển đổi. Patch trước đã được khôi phục trước khi thử; hãy kiểm tra file đích trước khi thử lại.";
 "patch.error.restore" = "Không thể khôi phục file gốc an toàn. App không ghi đè đích chưa được xác minh.";
 "patch.error.reset" = "Không thể đặt lại file theo trạng thái của gói. Mọi thay đổi dở dang đã được rollback.";
 "patch.error.invalid_import_link" = "Liên kết nhập patch không hợp lệ. Hãy dùng liên kết HTTPS an toàn tới gói .3105.";
