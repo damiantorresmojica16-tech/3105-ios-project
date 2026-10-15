@@ -123,9 +123,10 @@ enum DevicePatchService {
         operation: ([String: URL]) throws -> T
     ) throws -> T {
         var roots: [String: URL] = [:]
+    let ownBundleID = Bundle.main.bundleIdentifier
 
-        for bundleID in bundleIDs {
-            if bundleID == Bundle.main.bundleIdentifier {
+    for bundleID in bundleIDs {
+        if let ownBundleID, bundleID == ownBundleID {
                 do {
                     let documentsURL = try FileManager.default.url(
                         for: .documentDirectory,
